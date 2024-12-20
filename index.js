@@ -35,21 +35,26 @@ async function run() {
     // jobs related api
 
     const jobsCollection = client.db('jobPortal').collection('jobs');
+    const jobApplicationCollection = client.db('jobPortal').collection('job-applications')
 
     app.get('/jobs', async(req, res)=>{
        const cursor = jobsCollection.find();
        const result = await cursor.toArray();
        res.send(result)
-    })
+    });
 
     app.get('/jobs/:id', async(req, res)=>{
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
       const result = await jobsCollection.findOne(query);
       res.send(result);
-
     })
 
+    app.post('/job-applications', async(req, res)=>{
+      const application = req.body;
+      const result = jobApplicationCollection.insertOne(application);
+      res.send(result);
+    })
 
 
 
