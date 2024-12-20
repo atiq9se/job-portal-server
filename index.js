@@ -50,6 +50,28 @@ async function run() {
       res.send(result);
     })
 
+    // job application
+    app.get('/job-application', async(req, res)=>{
+      const email = req.query.email;
+      const query = {applicant_email: email}
+      const result = await jobApplicationCollection.find(query).toArray();
+
+      // fokira way to aggregate data
+      for(application of result ){
+        console.log(application.job_id)
+        const query1 = {_id: new ObjectId(application.job_id)}
+        const job = await jobsCollection.findOne(query1)
+        if(job){
+          application.title = job.title;
+          application.company = job.company;
+
+        }
+      }
+
+      res.send(result);
+
+    })
+
     app.post('/job-applications', async(req, res)=>{
       const application = req.body;
       const result = jobApplicationCollection.insertOne(application);
