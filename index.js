@@ -50,6 +50,12 @@ async function run() {
       res.send(result);
     })
 
+    app.post('/jobs', async(req, res)=>{
+      const newJob = req.body;
+      const result = await jobsCollection.insertOne(newJob);
+      res.send(result)
+    })
+
     // job application
     app.get('/job-application', async(req, res)=>{
       const email = req.query.email;
@@ -64,6 +70,8 @@ async function run() {
         if(job){
           application.title = job.title;
           application.company = job.company;
+          application.company_logo = job.company_logo;
+          application.location = job.location;
 
         }
       }
